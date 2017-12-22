@@ -84,8 +84,8 @@ func main() {
 				return
 			}
 			so.Emit("getEvaluateList",map[string]interface{}{
-				"status": "1",
-				"msg": evaluateList,
+				"status": "0",
+				"data": evaluateList,
 			})
 		})
 
@@ -100,6 +100,7 @@ func main() {
 			}
 			so.Emit("evaluate",map[string]string{
 				"status": "0",
+				"data": evaluate.EvaluateID,
 				"msg": evaluate.CourseName +"-"+evaluate.TeacherName + ": 评教成功！",
 			})
 		})
