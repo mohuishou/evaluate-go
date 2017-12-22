@@ -66,6 +66,14 @@ export default {
     },
     getEvaluateList: function(val){
         console.log(val)
+    },
+    evaluate: function(val){
+        if (val.status!=0){
+          this.$Message.error(val.msg);
+      }else{
+          this.$Message.success("登录成功！")
+          //跳转页面
+      }
     }
   },
   methods: {
