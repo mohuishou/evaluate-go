@@ -40,7 +40,10 @@ func main() {
 		log.Fatal(err)
 	}
 	server.On("connection", func(so socketio.Socket) {
+		log.Println("on connection")
+
 		var jwc scujwc.Jwc
+
 		so.On("login", func(params map[string]string) {
 			id,ok := params["student_id"]
 			uid,err := strconv.Atoi(id)
@@ -71,13 +74,36 @@ func main() {
 				"status": "0",
 				"msg": "登录成功",
 			})
+
+			evaluateList,err:=jwc.GetEvaList()
+			if err !=nil {
+				so.Emit("getEvaluateList", map[string]string{
+					"status": "1",
+					"msg": err.Error(),
+				})
+				return
+			}
+			so.Emit("getEvaluateList",map[string]interface{}{
+				"status": "1",
+				"msg": evaluateList,
+			})
 		})
-		log.Println("on connection")
-		so.Join("chat")
-		so.On("chat message", func(msg string) {
-			log.Println("emit:", so.Emit("chat message", msg))
-			so.BroadcastTo("chat", "chat message", msg)
+
+		so.On("evaluate", func(evaluate scujwc.Evaluate) {
+			err := jwc.Evaluate(&evaluate)
+			if err !=nil {
+				so.Emit("evaluate", map[string]string{
+					"status": "1",
+					"msg": err.Error(),
+				})
+				return
+			}
+			so.Emit("evaluate",map[string]string{
+				"status": "0",
+				"msg": evaluate.CourseName +"-"+evaluate.TeacherName + ": 评教成功！",
+			})
 		})
+
 		so.On("disconnection", func() {
 			log.Println("on disconnect")
 		})

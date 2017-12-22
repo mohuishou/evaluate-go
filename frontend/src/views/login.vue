@@ -13,7 +13,7 @@
                     <FormItem>
                         <Button long type="primary" :loading="loading" @click="handleSubmit('user')">
                             <span v-if="!loading">登录</span>
-        <span v-else>登录中，请稍候...</span>
+                            <span v-else>登录中，请稍候...</span>
                         </Button>
                     </FormItem>
                 </Form>
@@ -63,6 +63,9 @@ export default {
           //跳转页面
       }
       this.loading = false
+    },
+    getEvaluateList: function(val){
+        console.log(val)
     }
   },
   methods: {
