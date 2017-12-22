@@ -1,0 +1,3 @@
+package: github.com/mohuishou/evaluate-go
+import:
+- package: github.com/googollee/go-socket.io
