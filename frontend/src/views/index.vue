@@ -94,12 +94,13 @@ export default {
       } else {
         this.$Message.success(val.msg);
         for (let i = 0; i < this.evaArr.length; i++) {
-          if (this.evaArr[i].evaluate_id == val.data.evaluate_id) {
+          if (this.evaArr[i].teacher_id == val.data.teacher_id && this.evaArr[i].course_id == val.data.course_id) {
             this.$set(this.evaArr, i, val.data);
             this.evaCount++;
             if (this.evaCount == this.evaArr.length) {
               this.$Message.success("所有课程您已评教成功！");
             }
+            return
           }
         }
       }
@@ -111,7 +112,7 @@ export default {
         this.evaArr.forEach(e => {
           this.evaCount += e.status;
         });
-        this.is_count = true
+        this.is_count = true;
       }
       return this.evaArr;
     }

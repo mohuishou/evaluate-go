@@ -79,10 +79,8 @@ export default {
     getRandomComment: function() {
       let star = this.formData.star;
       if (!star || star < 1 || star > 5) return "";
-      console.log(star, comments[star]);
       let len = comments[star].length;
       let rand = Math.round(Math.random() * (len - 1));
-      console.log(rand);
       return comments[star][rand];
     },
     loading: function() {
