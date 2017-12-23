@@ -98,14 +98,15 @@ func main() {
 				})
 				return
 			}
-			so.Emit("evaluate",map[string]string{
+			so.Emit("evaluate",map[string]interface{}{
 				"status": "0",
-				"data": evaluate.EvaluateID,
+				"data": evaluate,
 				"msg": evaluate.CourseName +"-"+evaluate.TeacherName + ": 评教成功！",
 			})
 		})
 
 		so.On("disconnection", func() {
+			jwc.Logout()
 			log.Println("on disconnect")
 		})
 	})

@@ -23,8 +23,8 @@
     <div id="lists" v-else>
     <h3>四川大学快捷评教</h3>
     <Row>
-        <Col v-for="(val,k) in evaArr" :key="k" :xs="{ span: 24}" :md="{ span: 8}" :lg="{ span: 4}">
-         <eva-card :data="val"></eva-card>
+        <Col v-for="(val,k) in getEvaArr" :key="k" :xs="{ span: 24}" :md="{ span: 8}" :lg="{ span: 6}">
+         <eva-card class="eva-card" :data="val"></eva-card>
         </Col>
     </Row>
     </div>
@@ -62,7 +62,9 @@ export default {
       },
       is_login: false,
       loading: false,
-      evaArr: [{}]
+      evaArr: [{}],
+      is_count: false,
+      evaCount: 0
     };
   },
   sockets: {
@@ -74,7 +76,6 @@ export default {
         this.$Message.error(val.msg);
       } else {
         this.$Message.success("登录成功！");
-        this.is_login = true;
       }
       this.loading = false;
     },
@@ -84,6 +85,7 @@ export default {
       } else {
         this.evaArr = val.data;
         this.$Message.success("评教列表获取成功！");
+        this.is_login = true;
       }
     },
     evaluate: function(val) {
@@ -91,7 +93,27 @@ export default {
         this.$Message.error(val.msg);
       } else {
         this.$Message.success(val.msg);
+        for (let i = 0; i < this.evaArr.length; i++) {
+          if (this.evaArr[i].evaluate_id == val.data.evaluate_id) {
+            this.$set(this.evaArr, i, val.data);
+            this.evaCount++;
+            if (this.evaCount == this.evaArr.length) {
+              this.$Message.success("所有课程您已评教成功！");
+            }
+          }
+        }
       }
+    }
+  },
+  computed: {
+    getEvaArr() {
+      if (this.is_count == false) {
+        this.evaArr.forEach(e => {
+          this.evaCount += e.status;
+        });
+        this.is_count = true
+      }
+      return this.evaArr;
     }
   },
   methods: {
@@ -122,5 +144,9 @@ h3 {
   text-align: center;
   margin-top: 0.8em;
   margin-bottom: 0.8em;
+}
+
+.eva-card {
+  margin: 0.8em;
 }
 </style>
