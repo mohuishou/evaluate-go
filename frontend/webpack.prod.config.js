@@ -3,7 +3,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const merge = require('webpack-merge');
 const webpackBaseConfig = require('./webpack.base.config.js');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const fs = require('fs');
+const path = require('path');
 
 fs.open('./src/config/env.js', 'w', function (err, fd) {
     const buf = 'export default "production";';
@@ -12,7 +14,8 @@ fs.open('./src/config/env.js', 'w', function (err, fd) {
 
 module.exports = merge(webpackBaseConfig, {
     output: {
-        publicPath: '/dist/',
+        path: path.join(__dirname, '../public/src'),
+        publicPath: '/src/',
         filename: '[name].[hash].js',
         chunkFilename: '[name].[hash].chunk.js'
     },
@@ -36,9 +39,17 @@ module.exports = merge(webpackBaseConfig, {
             }
         }),
         new HtmlWebpackPlugin({
-            filename: '../index_prod.html',
+            filename: '../index.html',
             template: './src/template/index.ejs',
             inject: false
-        })
+        }),
+        new CleanWebpackPlugin(
+            ['../public/src'],　 //匹配删除的文件
+            {
+                root: __dirname,       　　　　　　　　　　//根目录
+                verbose:  true,        　　　　　　　　　　//开启在控制台输出信息
+                dry:      false        　　　　　　　　　　//启用删除文件
+            }
+        )
     ]
 });

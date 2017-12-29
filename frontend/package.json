@@ -15,6 +15,7 @@
   "author": "mohuishou",
   "license": "MIT",
   "dependencies": {
+    "clean-webpack-plugin": "^0.1.17",
     "iview": "^2.0.0-rc.8",
     "vue": "^2.2.6",
     "vue-router": "^2.2.1",
