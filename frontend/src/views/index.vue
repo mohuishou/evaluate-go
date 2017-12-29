@@ -1,5 +1,11 @@
 <template>
-    <div v-if="!is_login" id="login">
+    <div id="loading" v-if="!isConnected">
+      <Spin fix>
+        <Icon type="load-c" size=18 class="spin-icon-load"></Icon>
+        <div>Loading</div>
+      </Spin>
+    </div>
+    <div v-else-if="!isLogin" id="login">
         <Row id="row">
             <Col :xs="{ span: 22, offset: 1 }" :md="{ span: 12, offset: 6 }" :lg="{ span: 8, offset: 8 }">
                 <h3>四川大学快捷评教</h3>
@@ -60,16 +66,21 @@ export default {
         student_id: [{ validator: validateStudentId, trigger: "blur" }],
         password: [{ validator: validatePassWord, trigger: "blur" }]
       },
-      is_login: false,
+      isLogin: false,
       loading: false,
       evaArr: [{}],
       is_count: false,
-      evaCount: 0
+      evaCount: 0,
+      isConnected: false
     };
   },
   sockets: {
     connect: function() {
+      this.isConnected = true
       console.log("连接成功！");
+    },
+    connect_error: function(val){
+      this.$Message.error("连接服务器失败！");
     },
     login: function(val) {
       if (val.status != 0) {
@@ -85,7 +96,7 @@ export default {
       } else {
         this.evaArr = val.data;
         this.$Message.success("评教列表获取成功！");
-        this.is_login = true;
+        this.isLogin = true;
       }
     },
     evaluate: function(val) {
@@ -94,13 +105,16 @@ export default {
       } else {
         this.$Message.success(val.msg);
         for (let i = 0; i < this.evaArr.length; i++) {
-          if (this.evaArr[i].teacher_id == val.data.teacher_id && this.evaArr[i].course_id == val.data.course_id) {
+          if (
+            this.evaArr[i].teacher_id == val.data.teacher_id &&
+            this.evaArr[i].course_id == val.data.course_id
+          ) {
             this.$set(this.evaArr, i, val.data);
             this.evaCount++;
             if (this.evaCount == this.evaArr.length) {
               this.$Message.success("所有课程您已评教成功！");
             }
-            return
+            return;
           }
         }
       }
@@ -133,6 +147,26 @@ export default {
 </script>
 
 <style scoped>
+#loading {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.spin-icon-load {
+  animation: ani-spin 1s linear infinite;
+}
+@keyframes ani-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 #login {
   margin-top: 10em;
   width: 100%;

@@ -23,7 +23,8 @@ func NewServer(transportNames []string) (*Server, error) {
 }
 
 func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Access-Control-Allow-Origin", "http://localhost:8080")
+	w.Header().Add("Access-Control-Allow-Origin", "http://eva.scuplus.cn")
+	// w.Header().Add("Access-Control-Allow-Origin", "http://localhost:8080")
 	w.Header().Add("Access-Control-Allow-Credentials", "true")
 	s.Server.ServeHTTP(w, r)
 }
@@ -110,7 +111,7 @@ func main() {
 	})
 
 	http.Handle("/socket.io/", server)
-	http.Handle("/", http.FileServer(http.Dir("./public")))
+	// http.Handle("/", http.FileServer(http.Dir("./public")))
 	log.Println("Serving at localhost:5000...")
 	log.Fatal(http.ListenAndServe(":5000", nil))
 }
